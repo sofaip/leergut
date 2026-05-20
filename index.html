@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Leergut</title>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+</head>
+
+<body>
+
+<h2>Leergut Rechner</h2>
+
+<p>0.08€: <input type="number" id="g" value="0"></p>
+<p>0.15€: <input type="number" id="b15" value="0"></p>
+<p>0.25€: <input type="number" id="b25" value="0"></p>
+<p>1.5€: <input type="number" id="k" value="0"></p>
+
+<button onclick="calc()">GO</button>
+
+<h3 id="result"></h3>
+<svg id="barcode"></svg>
+
+<script>
+function calc() {
+  let total =
+    g.value*0.08 +
+    b15.value*0.15 +
+    b25.value*0.25 +
+    k.value*1.5;
+
+  total = total.toFixed(2);
+
+  result.innerHTML = "TOTAL: " + total + " €";
+
+  JsBarcode("#barcode", "SUM-"+total+"-"+Date.now());
+}
+</script>
+
+</body>
+</html>
