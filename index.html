@@ -1,39 +1,146 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Leergut</title>
+<title>Pfand Tracker</title>
+
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+<style>
+body{
+    font-family: monospace;
+    padding:20px;
+    background:#f2f2f2;
+}
+
+.receipt{
+    background:white;
+    padding:20px;
+    max-width:350px;
+    margin:auto;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+input{
+    width:60px;
+}
+
+button{
+    padding:10px;
+    margin-top:10px;
+}
+
+.line{
+    display:flex;
+    justify-content:space-between;
+}
+
+.center{
+    text-align:center;
+}
+
+.small{
+    font-size:12px;
+}
+</style>
 </head>
 
 <body>
 
-<h2>Leergut Rechner</h2>
+<div class="receipt">
 
-<p>0.08€: <input type="number" id="g" value="0"></p>
-<p>0.15€: <input type="number" id="b15" value="0"></p>
-<p>0.25€: <input type="number" id="b25" value="0"></p>
-<p>1.5€: <input type="number" id="k" value="0"></p>
+<div class="center">
+<h3>TOMRA DEMO</h3>
+<p>PRIVATE TRACKER</p>
+</div>
 
-<button onclick="calc()">GO</button>
+<div class="line">
+<span>0.08€</span>
+<input type="number" id="g" value="0">
+</div>
 
-<h3 id="result"></h3>
+<div class="line">
+<span>0.15€</span>
+<input type="number" id="b15" value="0">
+</div>
+
+<div class="line">
+<span>0.25€</span>
+<input type="number" id="b25" value="0">
+</div>
+
+<div class="line">
+<span>1.50€</span>
+<input type="number" id="k" value="0">
+</div>
+
+<button onclick="gen()">GENERATE</button>
+
+<hr>
+
+<div id="output"></div>
+
+<div class="center">
 <svg id="barcode"></svg>
+</div>
+
+</div>
 
 <script>
-function calc() {
-  let total =
-    g.value*0.08 +
-    b15.value*0.15 +
-    b25.value*0.25 +
-    k.value*1.5;
 
-  total = total.toFixed(2);
-
-  result.innerHTML = "TOTAL: " + total + " €";
-
-  JsBarcode("#barcode", "SUM-"+total+"-"+Date.now());
+function pad(num,size){
+    let s = num+"";
+    while(s.length < size) s = "0"+s;
+    return s;
 }
+
+function gen(){
+
+    let g = parseInt(document.getElementById("g").value)||0;
+    let b15 = parseInt(document.getElementById("b15").value)||0;
+    let b25 = parseInt(document.getElementById("b25").value)||0;
+    let k = parseInt(document.getElementById("k").value)||0;
+
+    let total =
+        g*0.08 +
+        b15*0.15 +
+        b25*0.25 +
+        k*1.5;
+
+    total = total.toFixed(2);
+
+    let cents = Math.round(total*100);
+
+    // ДЕМО номер
+    let prefix = "10000";
+
+    // випадковий номер чека
+    let bon = pad(Math.floor(Math.random()*9999999),7);
+
+    // сума
+    let amount = pad(cents,8);
+
+    // резерв
+    let reserve = pad(Math.floor(Math.random()*99999999),8);
+
+    // фінальний код
+    let finalCode = prefix + bon + amount + reserve;
+
+    document.getElementById("output").innerHTML = `
+        <div>Bon: ${bon}</div>
+        <div>Total: ${total} €</div>
+        <div class="small">${finalCode}</div>
+    `;
+
+    JsBarcode("#barcode", finalCode, {
+        format:"CODE128",
+        width:2,
+        height:120,
+        displayValue:false
+    });
+
+}
+
 </script>
 
 </body>
