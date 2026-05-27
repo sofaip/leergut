@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+
 <meta charset="UTF-8">
+
 <title>Pfand Tracker</title>
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+<!-- ПІДКЛЮЧЕННЯ JS -->
+<script src="script.js"></script>
 
 <style>
 body{
@@ -43,6 +48,7 @@ button{
     font-size:12px;
 }
 </style>
+
 </head>
 
 <body>
@@ -85,63 +91,6 @@ button{
 </div>
 
 </div>
-
-<script>
-
-function pad(num,size){
-    let s = num+"";
-    while(s.length < size) s = "0"+s;
-    return s;
-}
-
-function gen(){
-
-    let g = parseInt(document.getElementById("g").value)||0;
-    let b15 = parseInt(document.getElementById("b15").value)||0;
-    let b25 = parseInt(document.getElementById("b25").value)||0;
-    let k = parseInt(document.getElementById("k").value)||0;
-
-    let total =
-        g*0.08 +
-        b15*0.15 +
-        b25*0.25 +
-        k*1.5;
-
-    total = total.toFixed(2);
-
-    let cents = Math.round(total*100);
-
-    // ДЕМО номер
-    let prefix = "10000";
-
-    // випадковий номер чека
-    let bon = pad(Math.floor(Math.random()*9999999),7);
-
-    // сума
-    let amount = pad(cents,8);
-
-    // резерв
-    let reserve = pad(Math.floor(Math.random()*99999999),8);
-
-    // фінальний код
-    let finalCode = prefix + bon + amount + reserve;
-
-    document.getElementById("output").innerHTML = `
-        <div>Bon: ${bon}</div>
-        <div>Total: ${total} €</div>
-        <div class="small">${finalCode}</div>
-    `;
-
-    JsBarcode("#barcode", finalCode, {
-        format:"CODE128",
-        width:2,
-        height:120,
-        displayValue:false
-    });
-
-}
-
-</script>
 
 </body>
 </html>
