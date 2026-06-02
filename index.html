@@ -7,8 +7,6 @@
 <title>Pfand Tracker</title>
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-
-<!-- ПІДКЛЮЧЕННЯ JS -->
 <script src="script.js"></script>
 
 <style>
@@ -27,17 +25,19 @@ body{
 }
 
 input{
-    width:60px;
+    width:80px;
 }
 
 button{
     padding:10px;
     margin-top:10px;
+    width:100%;
 }
 
 .line{
     display:flex;
     justify-content:space-between;
+    margin-bottom:8px;
 }
 
 .center{
@@ -46,6 +46,7 @@ button{
 
 .small{
     font-size:12px;
+    word-break:break-all;
 }
 </style>
 
@@ -61,23 +62,30 @@ button{
 </div>
 
 <div class="line">
-<span>0.08€</span>
+<span>0.08€ пляшки</span>
 <input type="number" id="g" value="0">
 </div>
 
 <div class="line">
-<span>0.15€</span>
+<span>0.15€ пляшки</span>
 <input type="number" id="b15" value="0">
 </div>
 
 <div class="line">
-<span>0.25€</span>
+<span>0.25€ пляшки</span>
 <input type="number" id="b25" value="0">
 </div>
 
 <div class="line">
-<span>1.50€</span>
+<span>1.50€ ящики</span>
 <input type="number" id="k" value="0">
+</div>
+
+<hr>
+
+<div class="line">
+<span>Bon №</span>
+<input type="number" id="bon" value="15582">
 </div>
 
 <button onclick="gen()">GENERATE</button>
