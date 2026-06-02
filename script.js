@@ -14,7 +14,7 @@ function gen(){
   prefix = prefix.slice(0, 12).padStart(12, "0");
 
   // Структура: [12 цифр] + [00000] + [сума без лідуючих нулів] + [нулі до 29]
-  let zeros = "0000";
+  let zeros = "00000";
   let amount = cents.toString(); // без padStart — жодних зайвих нулів!
   let core = prefix + zeros + amount;
   let code = core.padEnd(29, "0");
