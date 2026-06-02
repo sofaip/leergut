@@ -1,46 +1,35 @@
-function pad(num,size){
+function pad(num, size) {
     let s = num + "";
-
-    while(s.length < size){
+    while (s.length < size) {
         s = "0" + s;
     }
-
     return s;
 }
 
-function generateTomraStyle(totalCents){
+function generateBarcode(prefix12, cents) {
 
-    let prefix = "10000";
+    // гарантуємо 12 цифр
+    prefix12 = pad(prefix12, 12).slice(0, 12);
 
-    let bon =
-        document.getElementById("bon").value || "0";
+    // як ти просила: 5 нулів
+    let middle = "00000";
 
-    bon = pad(bon,7);
+    // сума (8 цифр)
+    let amount = pad(cents, 8);
 
-    let amount = pad(totalCents,8);
-
-    let reserve = "00000000";
-
-    return {
-        bon,
-        amount,
-        code: prefix + bon + amount + reserve
-    };
+    return prefix12 + middle + amount;
+}
 }
 
-function gen(){
+function gen() {
 
-    let g =
-        parseInt(document.getElementById("g").value) || 0;
+    let prefix =
+        document.getElementById("prefix").value || "0";
 
-    let b15 =
-        parseInt(document.getElementById("b15").value) || 0;
-
-    let b25 =
-        parseInt(document.getElementById("b25").value) || 0;
-
-    let k =
-        parseInt(document.getElementById("k").value) || 0;
+    let g = parseInt(document.getElementById("g").value) || 0;
+    let b15 = parseInt(document.getElementById("b15").value) || 0;
+    let b25 = parseInt(document.getElementById("b25").value) || 0;
+    let k = parseInt(document.getElementById("k").value) || 0;
 
     let total =
         g * 0.08 +
@@ -48,22 +37,19 @@ function gen(){
         b25 * 0.25 +
         k * 1.50;
 
-    total = total.toFixed(2);
+    let cents = Math.round(total * 100);
+    let totalFixed = total.toFixed(2);
 
-    let cents =
-        Math.round(parseFloat(total) * 100);
-
-    let data =
-        generateTomraStyle(cents);
+    let code = generateBarcode(prefix, cents);
 
     document.getElementById("output").innerHTML = `
-        <div><b>Bon:</b> ${data.bon}</div>
-        <div><b>Total:</b> ${total} €</div>
-        <div><b>Amount:</b> ${data.amount}</div>
-        <div class="small"><b>Barcode:</b><br>${data.code}</div>
+        <div><b>Prefix:</b> ${prefix}</div>
+        <div><b>Total:</b> ${totalFixed} €</div>
+        <div><b>Cents:</b> ${cents}</div>
+        <div class="small"><b>Barcode:</b><br>${code}</div>
     `;
 
-    JsBarcode("#barcode", data.code, {
+    JsBarcode("#barcode", code, {
         format: "CODE128",
         width: 2,
         height: 120,
